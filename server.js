@@ -39,7 +39,7 @@ app.post('/send-sms', async (req, res) => {
   const smsMessages = [
     `G'day ${business || 'mate'}! Welcome to TradeAssist A.I 👷‍♂️ We're stoked to have you onboard.`,
     `Here's how it works: When you miss a call, your A.I. instantly follows up with a reply like this 👇`,
-    `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here."`,
+    `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
   ];
 
   try {
