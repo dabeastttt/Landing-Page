@@ -293,12 +293,17 @@
   const fontSize = 20;
   let columns, drops;
 
-  // 🎯 Use whole slang words + emojis
-  const words = [
-    '🛠️', '🔧', '🔨', '👷‍♂️', '👷‍♀️',
-    'MATE', 'SMOKO', 'BLOODYOATH', 'LEGEND', 'TOOLS',
-    'BANTER', 'BEERS', 'YEAHNAH', 'CHOOK', 'SNAG',
-    'GIESTINNED', 'SHOUT', 'ARVO', 'RECKON', 'STRAYA', 'RIGHTO'
+  // Only include bolt, wrench, hammer-like symbols — not emoji, just characters
+  const symbols = [
+    '⊗', // bolt/nut-like
+    '⛏', // pickaxe (ASCII-style)
+    '⚒', // crossed hammers (Unicode)
+    '⛓', // chain link
+    '✚', // screw head
+    '╬', // grid steel look
+    '♯', // sharp bolt
+    '†', // old-school screw/bolt
+    '#', '%', '&', '*', '+', '=', '-', '|', '/', '\\'
   ];
 
   function initMatrix() {
@@ -315,8 +320,8 @@
     ctx.font = fontSize + 'px monospace';
 
     for (let i = 0; i < columns; i++) {
-      const word = words[Math.floor(Math.random() * words.length)];
-      ctx.fillText(word, i * fontSize, drops[i] * fontSize);
+      const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+      ctx.fillText(symbol, i * fontSize, drops[i] * fontSize);
 
       if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
         drops[i] = 0;
@@ -326,6 +331,12 @@
 
     requestAnimationFrame(drawMatrix);
   }
+
+  window.addEventListener('resize', initMatrix);
+  initMatrix();
+  drawMatrix();
+</script>
+
 
   window.addEventListener('resize', initMatrix);
   initMatrix();
