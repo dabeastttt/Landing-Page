@@ -290,10 +290,16 @@
 <script>
   const canvas = document.getElementById('matrixCanvas');
   const ctx = canvas.getContext('2d');
-  const fontSize = 16;
+  const fontSize = 20;
   let columns, drops;
 
-  const letters = 'アァカサタナハマヤラ0123456789$#%@&*!ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  // 🎯 Use whole slang words + emojis
+  const words = [
+    '🛠️', '🔧', '🔨', '👷‍♂️', '👷‍♀️',
+    'MATE', 'SMOKO', 'BLOODYOATH', 'LEGEND', 'TOOLS',
+    'BANTER', 'BEERS', 'YEAHNAH', 'CHOOK', 'SNAG',
+    'GIESTINNED', 'SHOUT', 'ARVO', 'RECKON', 'STRAYA', 'RIGHTO'
+  ];
 
   function initMatrix() {
     canvas.width = window.innerWidth;
@@ -309,8 +315,8 @@
     ctx.font = fontSize + 'px monospace';
 
     for (let i = 0; i < columns; i++) {
-      const char = letters.charAt(Math.floor(Math.random() * letters.length));
-      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+      const word = words[Math.floor(Math.random() * words.length)];
+      ctx.fillText(word, i * fontSize, drops[i] * fontSize);
 
       if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
         drops[i] = 0;
