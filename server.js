@@ -30,7 +30,7 @@ function formatPhone(phone) {
 
 // POST /send-sms route
 app.post('/send-sms', async (req, res) => {
-  const { name, business, email, phone, planSelect } = req.body;
+  const { name, business, email, phone } = req.body;
 
   if (!phone) return res.status(400).send('Phone number required');
 
@@ -45,7 +45,7 @@ app.post('/send-sms', async (req, res) => {
   try {
     // Save signup to Supabase
     const { error } = await supabase.from('signups').insert([
-      { name, business, email, phone: formattedPhone, plan: planSelect }
+      { name, business, email, phone: formattedPhone }
     ]);
 
     if (error) throw error;
