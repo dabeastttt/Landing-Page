@@ -293,16 +293,23 @@
   const fontSize = 20;
   let columns, drops;
 
-  // Only include bolt, wrench, hammer-like symbols — not emoji, just characters
+  // Tool-inspired symbols (Unicode characters, including wrench + toolbox)
   const symbols = [
-    '⊗', // bolt/nut-like
-    '⛏', // pickaxe (ASCII-style)
-    '⚒', // crossed hammers (Unicode)
-    '⛓', // chain link
-    '✚', // screw head
-    '╬', // grid steel look
-    '♯', // sharp bolt
-    '†', // old-school screw/bolt
+    '⊗', // bolt/nut
+    '⛏', // pickaxe
+    '⚒', // crossed hammers
+    '⛓', // chain
+    '🛠', // hammer & wrench combo
+    '🗜', // clamp/wrench
+    '🧰', // toolbox
+    '⚙', // gear
+    '⛭', // gear alt
+    '✚', // screw tip
+    '╬', // steel bar
+    '♯', // bolt sharp
+    '†', // bolt cross
+    '☗', // chisel edge
+    '╧', // wrench jaw
     '#', '%', '&', '*', '+', '=', '-', '|', '/', '\\'
   ];
 
@@ -336,7 +343,6 @@
   initMatrix();
   drawMatrix();
 </script>
-
 
   window.addEventListener('resize', initMatrix);
   initMatrix();
