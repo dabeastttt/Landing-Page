@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Success — TradeAssist A.I</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: #0A0A0A;
+      color: #FF6B00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: #0A0A0A;
+    }
+
+    .success-box {
+      position: relative;
+      z-index: 1;
+      background: rgba(30, 30, 30, 0.85);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      max-width: 360px;
+      text-align: center;
+      margin: 3rem auto;
+      box-shadow:
+        0 0 16px 4px #FF6B0088,
+        inset 0 0 10px 2px #FF6B0044;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease forwards 0.4s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bolt-wrapper {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: center;
+      animation: slideToCenter 1.8s ease-out forwards;
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    @keyframes slideToCenter {
+      0% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .glow-icon {
+      width: 120px;
+      height: 120px;
+      filter: drop-shadow(0 0 12px #FF6B00cc);
+      animation: glowPulse 3s ease-in-out infinite;
+      display: block;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 8px #FF6B00aa);
+      }
+      50% {
+        filter: drop-shadow(0 0 16px #FF914Dcc);
+      }
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin: 0.5rem 0 1rem;
+      text-shadow: 0 0 15px #FF6B00bb;
+      color: #FF6B00;
+    }
+
+    p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: #FF914Dcc;
+    }
+
+    a {
+      text-decoration: none;
+      color: #0A0A0A;
+      background: #FF6B00;
+      padding: 12px 25px;
+      font-weight: 700;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px #FF914D88;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    a:hover, a:focus {
+      background: #FF914D;
+      color: #0A0A0A;
+      box-shadow: 0 8px 24px #FF914Dcc;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="success-box">
+    <div class="bolt-wrapper">
+      <svg class="glow-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="orangeBolt" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FF6B00" />
+            <stop offset="100%" stop-color="#FF914D" />
+          </linearGradient>
+        </defs>
+        <path d="M32 8c-11 0-20 9-20 20v4c0 2.2 1.8 4 4 4h32c2.2 0 4-1.8 4-4v-4c0-11-9-20-20-20z"
+          fill="url(#orangeBolt)" stroke="#FFFFFF" stroke-width="2"/>
+        <path d="M20 36v-4c0-6.6 5.4-12 12-12s12 5.4 12 12v4"
+          fill="none" stroke="#FFFFFF" stroke-width="2"/>
+      </svg>
+    </div>
+
+     <h1>Thanks for Joining the Waitlist!</h1>
+      <p>We’ll be in touch soon with early access updates.<br>You're officially on the list!</p>
+      <a href="/">Back to Home</a>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    const fontSize = 16;
+    let width, height;
+    let columns;
+    const letters = 'アァカサタナハマヤラ0123456789$#%@&*!ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let drops = [];
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      columns = Math.floor(width / fontSize);
+      drops = Array(columns).fill(1);
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#FF6B00';
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < columns; i++) {
+        const char = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i] += 1;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+  </script>
+</body>
+</html>
