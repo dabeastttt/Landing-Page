@@ -17,11 +17,11 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static('public')); // serve static files from /public
+app.use(express.static('public')); // Serve static files from /public
 
 // Helper: format phone number to E.164 with +61 for Australia
 function formatPhone(phone) {
-  const cleaned = phone.replace(/\D/g, ''); // Remove non-digit chars
+  const cleaned = phone.replace(/\D/g, '');
   if (cleaned.startsWith('0')) return `+61${cleaned.slice(1)}`;
   if (cleaned.startsWith('61')) return `+${cleaned}`;
   if (phone.startsWith('+')) return phone;
@@ -38,8 +38,8 @@ app.post('/send-sms', async (req, res) => {
 
   const smsMessages = [
     `G'day ${business || 'mate'}! Welcome to TradeAssist A.I 👷‍♂️ We're stoked to have you onboard.`,
-    `Here's how it works: When you miss a call, your A.I. sends a reply like this 👇`,
-    `"Hi, this is ${business}’s assistant. They’re on the tools right now — what can we help you with?"`,
+    `Here's how it works: When you miss a call, your A.I. instantly follows up with a reply like this 👇`,
+    `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here."`,
   ];
 
   try {
@@ -59,7 +59,8 @@ app.post('/send-sms', async (req, res) => {
       });
     }
 
-    res.json({ success: true });
+    // ✅ Redirect to success page
+    res.redirect('/success');
   } catch (err) {
     console.error('Error:', err);
     res.status(500).send('Failed to onboard user');
@@ -69,7 +70,6 @@ app.post('/send-sms', async (req, res) => {
 // GET /signup-count route
 app.get('/signup-count', async (req, res) => {
   try {
-    // head:true + count:'exact' returns count but data is null
     const { count, error } = await supabase
       .from('signups')
       .select('*', { count: 'exact', head: true });
@@ -81,6 +81,11 @@ app.get('/signup-count', async (req, res) => {
     console.error('Error fetching signup count:', error);
     res.status(500).json({ error: 'Failed to get signup count' });
   }
+});
+
+// ✅ Serve success page from public directory
+app.get('/success', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'success.html'));
 });
 
 // Start the server
