@@ -221,7 +221,7 @@ main {
   animation-delay: 1.2s;
 }
 
-/* Tail for AI bubble - bottom left corner */
+/* Tail for AI bubble - bottom left corner, pointing inward */
 .bubble.ai::after {
   content: "";
   position: absolute;
@@ -230,13 +230,13 @@ main {
   width: 0;
   height: 0;
   border: 10px solid transparent;
-  border-right-color: #FF6B00;
   border-left: 0;
+  border-right: 10px solid #FF6B00; /* Flip to point right */
   border-top: 0;
-  transform: rotate(0deg);
+  border-bottom: 10px solid transparent;
 }
 
-/* Tail for Client bubble - bottom right corner */
+/* Tail for Client bubble - bottom right corner, pointing inward */
 .bubble.client::after {
   content: "";
   position: absolute;
@@ -245,10 +245,10 @@ main {
   width: 0;
   height: 0;
   border: 10px solid transparent;
-  border-left-color: #2a2a2a;
   border-right: 0;
+  border-left: 10px solid #2a2a2a; /* Flip to point left */
   border-top: 0;
-  transform: rotate(0deg);
+  border-bottom: 10px solid transparent;
 }
 
 
