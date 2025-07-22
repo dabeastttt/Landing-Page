@@ -39,6 +39,7 @@
       border-radius: 16px;
       box-shadow: 0 0 20px #FF914D99;
       padding: 2.5rem 3rem;
+      width: 90%; /* ADD THIS LINE */
     }
 
     .glow-icon {
@@ -327,9 +328,29 @@
     requestAnimationFrame(drawMatrix);
   }
 
-  window.addEventListener('resize', initMatrix);
+  let resizeTimeout;
+  let lastWidth = window.innerWidth;
+  let lastHeight = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    const nowWidth = window.innerWidth;
+    const nowHeight = window.innerHeight;
+
+    // Only reinit if actual size changed meaningfully
+    if (Math.abs(nowWidth - lastWidth) > 10 || Math.abs(nowHeight - lastHeight) > 10) {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        initMatrix();
+        lastWidth = nowWidth;
+        lastHeight = nowHeight;
+      }, 300);
+    }
+  });
+
+  // ✅ Start the matrix
   initMatrix();
   drawMatrix();
+</script>
 
   // Signup form & signup count logic
   const FOUNDERS_LIMIT = 100;
