@@ -28,6 +28,9 @@ function formatPhone(phone) {
   return `+${cleaned}`;
 }
 
+// Helper: delay execution for X milliseconds
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // POST /send-sms route
 app.post('/send-sms', async (req, res) => {
   const { name, business, email, phone } = req.body;
@@ -37,18 +40,15 @@ app.post('/send-sms', async (req, res) => {
   const formattedPhone = formatPhone(phone);
 
   const smsMessages = [
-  `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
-  `We’re building something game-changing for tradies who are too busy to answer the phone — and you’ll be one of the first to try it.`,
-  `Here’s what’s coming: When you miss a call, your A.I. instantly replies like this 👇`,
-  `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
-  `✅ Setup’s dead simple — just call forward your number to your A.I. number. It works straight out of the box on both Apple and Android. No stress.`,
-  `💡 Once that’s done, it’s set-and-forget. No apps, no logins, just smart replies to missed calls — automatically.`,
-  `📲 Your A.I. handles enquiries via SMS and logs everything for you. No more lost leads.`,
-  `📈 You’ll even get daily updates on how many jobs or questions came in.`,
-  `🧰 And if you want to check messages manually, we’ll have a private dashboard ready for you.`,
-  `🔥 We’ll be rolling out to early users over the next couple months — so hang tight, and we’ll text you as soon as you’re up!`,
-];
-
+    `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
+    `We’re building something game-changing for tradies too busy to answer the phone — and you’ll be one of the first to try it.`,
+    `Here’s what’s coming: When you miss a call, your A.I. replies like this 👇`,
+    `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
+    `✅ Setup will be simple — just **call forward** your number to your assigned A.I. number.`,
+    `💡 No apps or logins — just smart, automatic replies to missed calls.`,
+    `📈 You’ll get daily updates, and there’ll be a private dashboard if you want to check messages manually.`,
+    `🔥 We’re rolling out over the next couple months — you’ll get a text as soon as you’re up!`,
+  ];
 
   try {
     // Save signup to Supabase
@@ -58,13 +58,14 @@ app.post('/send-sms', async (req, res) => {
 
     if (error) throw error;
 
-    // Send SMS messages
+    // Send SMS messages one by one with 1-second delay
     for (const msg of smsMessages) {
       await client.messages.create({
         body: msg,
         from: process.env.TWILIO_PHONE,
         to: formattedPhone
       });
+      await delay(1000); // 1 second delay
     }
 
     // ✅ Redirect to success page
@@ -100,4 +101,3 @@ app.get('/success', (req, res) => {
 app.listen(port, () => {
   console.log(`✅ Server running at http://localhost:${port}`);
 });
-
