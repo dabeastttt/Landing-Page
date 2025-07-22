@@ -252,16 +252,18 @@ main {
   </svg>
 
   <h1>TradeAssist A.I</h1>
-  <h2>BUILT FOR TRADIES - BY TRADIES.</h2>
+  <h2>BUILT FOR TRADIES - WITH TRADIES.</h2>
 
   <!-- Urgency message -->
   <div id="signupCountMessage" style="text-align:center; margin-bottom:1rem; color:#FF6B00; font-weight:700; font-size:1.1rem;">
     Loading current waitlist status...
   </div>
 
-<p style="text-align:center; margin-top: 2rem; color: #FF914D; font-weight: 600; font-size: 1rem;">
+<p style="text-align:center; margin-top: 2rem; color: #FF914D; font-weight: 600; font-size: 1rem; line-height: 1.6;">
   While you're on the tools, this is how your A.I handles missed calls — instantly.<br>
- See the A.I in action — click a view.
+  <span style="display: inline-block; margin-top: 1rem;">
+    See the A.I in action — click a view.
+  </span>
 </p>
 
   <div id="customerSmsPreview" class="sms-preview" style="display:none;">
@@ -354,7 +356,6 @@ main {
     const nowWidth = window.innerWidth;
     const nowHeight = window.innerHeight;
 
-    // Only reinit if actual size changed meaningfully
     if (Math.abs(nowWidth - lastWidth) > 10 || Math.abs(nowHeight - lastHeight) > 10) {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
@@ -365,107 +366,108 @@ main {
     }
   });
 
-  // ✅ Start the matrix
+  // Start the matrix animation
   initMatrix();
   drawMatrix();
 </script>
 
-  // Signup form & signup count logic
-  const FOUNDERS_LIMIT = 100;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const FOUNDERS_LIMIT = 100;
 
-  const form = document.getElementById('signupForm');
-  const loadingScreen = document.getElementById('loadingScreen');
-  const button = form.querySelector('button');
-  const signupCountMessage = document.getElementById('signupCountMessage');
+    const form = document.getElementById('signupForm');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const button = form.querySelector('button');
+    const signupCountMessage = document.getElementById('signupCountMessage');
 
-  async function updateSignupCount() {
-    try {
-      const res = await fetch('/signup-count');
-      if (!res.ok) throw new Error('Failed to fetch signup count');
-      const data = await res.json();
-      const count = data.count || 0;
-      const spotsLeft = FOUNDERS_LIMIT - count;
+    async function updateSignupCount() {
+      try {
+        const res = await fetch('/signup-count');
+        if (!res.ok) throw new Error('Failed to fetch signup count');
+        const data = await res.json();
+        const count = data.count || 0;
+        const spotsLeft = FOUNDERS_LIMIT - count;
 
-      if (spotsLeft > 0) {
-        signupCountMessage.textContent = `🔥 ${count} users joined! Only ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left for the $1/day Founders Deal! Act fast!`;
-        signupCountMessage.style.color = '#FF6B00';
-      } else {
-        signupCountMessage.textContent = `🚨 Founders Deal is fully booked. Join the waitlist to secure your spot at regular pricing.`;
-        signupCountMessage.style.color = '#FF4444';
+        if (spotsLeft > 0) {
+          signupCountMessage.textContent = `🔥 ${count} users joined! Only ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left for the $1/day Founders Deal! Act fast!`;
+          signupCountMessage.style.color = '#FF6B00';
+        } else {
+          signupCountMessage.textContent = `🚨 Founders Deal is fully booked. Join the waitlist to secure your spot at regular pricing.`;
+          signupCountMessage.style.color = '#FF4444';
+        }
+      } catch (err) {
+        signupCountMessage.textContent = 'Unable to load waitlist status.';
+        signupCountMessage.style.color = '#888';
+        console.error(err);
       }
-    } catch (err) {
-      signupCountMessage.textContent = 'Unable to load waitlist status.';
-      signupCountMessage.style.color = '#888';
-      console.error(err);
-    }
-  }
-
-  updateSignupCount();
-  setInterval(updateSignupCount, 30000);
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
     }
 
-    if (signupCountMessage.textContent.includes('fully booked')) {
-      alert('Sorry, the $1/day Founders Deal is fully booked. You can still join the waitlist.');
-    }
+    updateSignupCount();
+    setInterval(updateSignupCount, 30000);
 
-    loadingScreen.style.display = 'block';
-    button.disabled = true;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    const formData = {
-      name: form.name.value.trim(),
-      business: form.business.value.trim(),
-      email: form.email.value.trim(),
-      phone: form.phone.value.trim(),
-    };
-
-    try {
-      const res = await fetch('/send-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      if (res.ok) {
-        window.location.href = '/success';
-      } else {
-        throw new Error('Registration failed');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
       }
-    } catch (err) {
-      alert("Registration error. Please try again.");
-      loadingScreen.style.display = 'none';
-      button.disabled = false;
-    }
+
+      if (signupCountMessage.textContent.includes('fully booked')) {
+        alert('Sorry, the $1/day Founders Deal is fully booked. You can still join the waitlist.');
+      }
+
+      loadingScreen.style.display = 'block';
+      button.disabled = true;
+
+      const formData = {
+        name: form.name.value.trim(),
+        business: form.business.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.phone.value.trim(),
+      };
+
+      try {
+        const res = await fetch('/send-sms', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        if (res.ok) {
+          window.location.href = '/success';
+        } else {
+          throw new Error('Registration failed');
+        }
+      } catch (err) {
+        alert("Registration error. Please try again.");
+        loadingScreen.style.display = 'none';
+        button.disabled = false;
+      }
+    });
+
+    const customerBtn = document.getElementById('customerViewBtn');
+    const tradieBtn = document.getElementById('tradieViewBtn');
+    const customerPreview = document.getElementById('customerSmsPreview');
+    const tradiePreview = document.getElementById('tradieSmsPreview');
+
+    customerBtn.addEventListener('click', () => {
+      customerPreview.style.display = 'block';
+      tradiePreview.style.display = 'none';
+      customerBtn.disabled = true;
+      tradieBtn.disabled = false;
+    });
+
+    tradieBtn.addEventListener('click', () => {
+      customerPreview.style.display = 'none';
+      tradiePreview.style.display = 'block';
+      tradieBtn.disabled = true;
+      customerBtn.disabled = false;
+    });
+
+    // Optionally auto-trigger customer view on load:
+    // customerBtn.click();
   });
-
-  const customerBtn = document.getElementById('customerViewBtn');
-  const tradieBtn = document.getElementById('tradieViewBtn');
-  const customerPreview = document.getElementById('customerSmsPreview');
-  const tradiePreview = document.getElementById('tradieSmsPreview');
-
-  customerBtn.addEventListener('click', () => {
-    customerPreview.style.display = 'block';
-    tradiePreview.style.display = 'none';
-    customerBtn.disabled = true;
-    tradieBtn.disabled = false;
-  });
-
-  tradieBtn.addEventListener('click', () => {
-    customerPreview.style.display = 'none';
-    tradiePreview.style.display = 'block';
-    tradieBtn.disabled = true;
-    customerBtn.disabled = false;
-  });
-
- // window.addEventListener('load', () => {
-//    customerBtn.click();
-  //});
 </script>
 
 </body>
