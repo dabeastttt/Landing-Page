@@ -205,7 +205,7 @@ main {
   opacity: 0;
 }
 
-/* AI bubble on left */
+/* Left (AI) bubble */
 .bubble.ai {
   background-color: #FF6B00;
   color: #0A0A0A;
@@ -213,7 +213,7 @@ main {
   animation-delay: 0.2s;
 }
 
-/* Client bubble on right */
+/* Right (Client) bubble */
 .bubble.client {
   background-color: #2a2a2a;
   color: #fff;
@@ -225,33 +225,31 @@ main {
 .bubble.ai::after {
   content: "";
   position: absolute;
-  bottom: -10px;
+  bottom: -8px;
   left: 20px;
   width: 0;
   height: 0;
-  border: 12px solid transparent;
+  border: 10px solid transparent;
   border-top-color: #FF6B00;
   border-bottom: 0;
-  border-left: 0;
-  margin-left: -6px;
+  transform: rotate(45deg);
 }
 
-/* Tail for client bubble - bottom right */
+/* Tail for Client bubble - bottom right */
 .bubble.client::after {
   content: "";
   position: absolute;
-  bottom: -10px;
+  bottom: -8px;
   right: 20px;
   width: 0;
   height: 0;
-  border: 12px solid transparent;
+  border: 10px solid transparent;
   border-top-color: #2a2a2a;
   border-bottom: 0;
-  border-right: 0;
-  margin-right: -6px;
+  transform: rotate(-45deg);
 }
 
-/* Optional fade-in animation */
+/* Optional: fade-in animation */
 @keyframes fadeIn {
   to {
     opacity: 1;
