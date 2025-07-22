@@ -185,7 +185,7 @@ main {
       margin-top: 1.5rem;
     }
 
-.chat {
+.chat { 
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -196,7 +196,7 @@ main {
 }
 
 .bubble {
-  position: relative;
+  position: relative; /* needed for tail */
   padding: 0.9rem 1.2rem;
   border-radius: 14px;
   max-width: 85%;
@@ -205,49 +205,44 @@ main {
   opacity: 0;
 }
 
-/* Left (AI) bubble */
+/* AI bubble - orange - bottom left tail */
 .bubble.ai {
   background-color: #FF6B00;
   color: #0A0A0A;
   align-self: flex-start;
   animation-delay: 0.2s;
 }
-
-/* Right (Client) bubble */
-.bubble {
-  position: relative; /* Needed for the ::after tail */
-  padding: 0.9rem 1.2rem;
-  border-radius: 14px;
-  max-width: 85%;
-  font-size: 1rem;
-  animation: fadeIn 0.8s ease forwards;
-  opacity: 0;
-}
-
-/* Left side AI bubble (orange) */
 .bubble.ai::after {
   content: "";
   position: absolute;
   bottom: 0;
-  left: -12px;
+  left: 0;
   width: 0;
   height: 0;
   border-top: 16px solid transparent;
-  border-bottom: 0 solid transparent;
   border-right: 16px solid #FF6B00;
+  border-bottom: 0 solid transparent;
+  transform: translateX(-100%);
 }
 
-/* Right side Client bubble (dark) */
+/* Client bubble - dark - bottom right tail */
+.bubble.client {
+  background-color: #2a2a2a;
+  color: #fff;
+  align-self: flex-end;
+  animation-delay: 1.2s;
+}
 .bubble.client::after {
   content: "";
   position: absolute;
   bottom: 0;
-  right: -12px;
+  right: 0;
   width: 0;
   height: 0;
   border-top: 16px solid transparent;
-  border-bottom: 0 solid transparent;
   border-left: 16px solid #2a2a2a;
+  border-bottom: 0 solid transparent;
+  transform: translateX(100%);
 }
 
 
