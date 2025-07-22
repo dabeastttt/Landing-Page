@@ -31,11 +31,6 @@ body, html {
   html, body {
     height: -webkit-fill-available;
   }
-
-  main {
-    height: -webkit-fill-available;
-    max-height: -webkit-fill-available;
-  }
 }
 
 /* Matrix Canvas Background */
@@ -47,26 +42,23 @@ body, html {
   height: 100%;
   z-index: 0;
   background: #0A0A0A;
-  pointer-events: none; /* Don't block touch/scroll */
+  pointer-events: none;
 }
 
-/* Main Content Panel */
+/* Main Panel */
 main {
   position: relative;
   z-index: 10;
   max-width: 440px;
   width: 90%;
-  margin: 0 auto;
-  height: 100vh;
-  max-height: 100vh;
-  overflow-y: auto;
+  margin: 4vh auto 0 auto; /* Push down from top */
+  height: 90vh; /* Reduced height */
   padding: 2.5rem 3rem;
   background: #1E1E1E;
-  border-radius: 16px;
+  border-radius: 24px;
   box-shadow: 0 0 20px #FF914D99;
-  box-sizing: border-box;
+  overflow-y: auto;
 }
-
     .glow-icon {
       display: block;
       margin: 0 auto 1.5rem auto;
