@@ -39,16 +39,16 @@ app.post('/send-sms', async (req, res) => {
 
   const formattedPhone = formatPhone(phone);
 
-  const smsMessages = [
-    `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
-    `We’re building something game-changing for tradies too busy to answer the phone — and you’ll be one of the first to try it.`,
-    `Here’s what’s coming: When you miss a call, your A.I. replies like this 👇`,
-    `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
-    `✅ Setup will be simple — just **call forward** your number to your assigned A.I. number.`,
-    `💡 No apps or logins — just smart, automatic replies to missed calls.`,
-    `📈 You’ll get daily updates, and there’ll be a private dashboard if you want to check messages manually.`,
-    `🔥 We’re rolling out over the next couple months — you’ll get a text as soon as you’re up!`,
-  ];
+const smsMessages = [
+  `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
+  `Here’s what’s coming: When you miss a call, your A.I. replies like this 👇`,
+  `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
+  `✅ Setup will be simple — just **call forward** your number to your assigned A.I. number.`,
+  `💡 No apps or logins — just smart, automatic replies to missed calls.`,
+  `📈 You’ll get daily updates, and there’ll be a private dashboard if you want to check messages manually.`,
+  `🔥 We’re building something game-changing for tradies too busy to answer the phone. We’re rolling out over the next couple months — and you’ll be one of the first to try it.`,
+];
+
 
   try {
     // Save signup to Supabase
