@@ -301,29 +301,29 @@ main {
 <div id="customerSmsPreview" class="sms-preview" style="display:none;">
   <h2>Lead POV</h2>
   <div class="chat">
-    <div class="bubble ai">Hi! I’m Jake’s Plumbing A.I. assistant, here to help while Jake’s on a job — how can we assist you today?</div>
+    <div class="bubble ai show">Hi! I’m Jake’s Plumbing A.I. assistant, here to help while Jake’s on a job — how can we assist you today?</div>
 
-    <div class="bubble typing client" id="leadTyping1">...</div>
-    <div class="bubble client" id="leadMsg1" style="display: none;">Hey, just wondering if you do blocked drains?</div>
+    <div class="bubble typing client" id="leadTyping1" style="display: block;">...</div>
+    <div class="bubble client" id="leadMsg1">Hey, just wondering if you do blocked drains?</div>
 
-    <div class="bubble typing ai" id="leadTyping2">...</div>
-    <div class="bubble ai" id="leadMsg2" style="display: none;">Absolutely, we do. Want me to book you in for a quote today or tomorrow? Just leave your name and information and I’ll notify Jake now.</div>
+    <div class="bubble typing ai" id="leadTyping2" style="display: block;">...</div>
+    <div class="bubble ai" id="leadMsg2">Absolutely, we do. Want me to book you in for a quote today or tomorrow? Just leave your name and information and I’ll notify Jake now.</div>
   </div>
 </div>
 
 <div id="tradieSmsPreview" class="sms-preview" style="display:none;">
   <h2>Tradie POV</h2>
   <div class="chat">
-    <div class="bubble ai">🤖 Missed call from 0412 345 678: John Smith, blocked drain, needs a quote!</div>
+    <div class="bubble ai show">🤖 Missed call from 0412 345 678: John Smith, blocked drain, needs a quote!</div>
 
-    <div class="bubble typing ai" id="tradieTyping1">...</div>
-    <div class="bubble ai" id="tradieMsg1" style="display: none;">
+    <div class="bubble typing ai" id="tradieTyping1" style="display: block;">...</div>
+    <div class="bubble ai" id="tradieMsg1">
       ✅ TradeAssist A.I: I’ve followed up and locked in the lead — your call is scheduled for 1 PM, as per your preferred time.
       <br>Reply with <strong>ACCEPT</strong> or <strong>DECLINE</strong> to confirm.
     </div>
 
-    <div class="bubble typing client" id="tradieTyping2">...</div>
-    <div class="bubble client" id="tradieMsg2" style="display: none;">
+    <div class="bubble typing client" id="tradieTyping2" style="display: block;">...</div>
+    <div class="bubble client" id="tradieMsg2">
       Accept. Cheers for keeping the lead warm, just got back from smoko and locked in the booking.
     </div>
   </div>
@@ -335,11 +335,15 @@ main {
     document.getElementById('customerSmsPreview').style.display = 'none';
     document.getElementById('tradieSmsPreview').style.display = 'none';
 
-    // Reset all bubbles
-    const allTyping = document.querySelectorAll('.bubble.typing');
-    const allMessages = document.querySelectorAll('.bubble[style*="display: none"]');
-    allTyping.forEach(b => b.style.display = 'block');
-    allMessages.forEach(b => b.style.display = 'none');
+    // Show all typing indicators
+    document.querySelectorAll('.bubble.typing').forEach(b => {
+      b.style.display = 'block';
+    });
+
+    // Hide all message bubbles (non-typing)
+    document.querySelectorAll('.bubble:not(.typing)').forEach(b => {
+      b.classList.remove('show');
+    });
   }
 
   function triggerCustomerFlow() {
@@ -347,12 +351,12 @@ main {
 
     setTimeout(() => {
       document.getElementById('leadTyping1').style.display = 'none';
-      document.getElementById('leadMsg1').style.display = 'block';
+      document.getElementById('leadMsg1').classList.add('show');
     }, 1000);
 
     setTimeout(() => {
       document.getElementById('leadTyping2').style.display = 'none';
-      document.getElementById('leadMsg2').style.display = 'block';
+      document.getElementById('leadMsg2').classList.add('show');
     }, 2000);
   }
 
@@ -361,12 +365,12 @@ main {
 
     setTimeout(() => {
       document.getElementById('tradieTyping1').style.display = 'none';
-      document.getElementById('tradieMsg1').style.display = 'block';
+      document.getElementById('tradieMsg1').classList.add('show');
     }, 1000);
 
     setTimeout(() => {
       document.getElementById('tradieTyping2').style.display = 'none';
-      document.getElementById('tradieMsg2').style.display = 'block';
+      document.getElementById('tradieMsg2').classList.add('show');
     }, 2000);
   }
 
@@ -381,8 +385,6 @@ main {
     triggerTradieFlow();
   });
 </script>
-
-
 
 
   <div class="toggle-buttons" style="margin-bottom: 2rem;">
