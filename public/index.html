@@ -390,7 +390,7 @@ main {
         const spotsLeft = FOUNDERS_LIMIT - count;
 
         if (spotsLeft > 0) {
-          signupCountMessage.textContent = `🔥 ${count} users joined! Only ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left for the $1/day Founders Deal-Get early access & priority onboarding!`;
+          signupCountMessage.innerHTML = `🔥 ${count} users joined! Only ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left for the $1/day Founders Deal.<br><strong>Get early access & priority onboarding!</strong>`;
           signupCountMessage.style.color = '#FF6B00';
         } else {
           signupCountMessage.textContent = `🚨 Founders Deal is fully booked. Join the waitlist to secure your spot at regular pricing.`;
