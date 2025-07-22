@@ -240,30 +240,9 @@
     Loading current waitlist status...
   </div>
 
-  <form id="signupForm" autocomplete="off" novalidate>
-    <label for="name">Full Name</label>
-    <input type="text" id="name" name="name" placeholder="Name" required />
-
-    <label for="business">Business Name</label>
-    <input type="text" id="business" name="business" placeholder="Business Name" required />
-
-    <label for="email">Email Address</label>
-    <input type="email" id="email" name="email" placeholder="Email@example.com" required />
-
-    <label for="phone">Mobile Number</label>
-    <input type="tel" id="phone" name="phone" placeholder="0400 000 000" pattern="[0-9\s\-+]+" required />
-
-    <button type="submit">Join Waitlist</button>
-  </form>
-
   <p style="text-align:center; margin-top: 2rem; color: #FF914D; font-weight: 600; font-size: 1rem;">
-    This is what happens when a customer calls while you're busy and you miss a call.
+    While you're on the tools, this is how your AI handles missed calls — instantly.
   </p>
-
-  <div class="toggle-buttons">
-    <button type="button" id="customerViewBtn">Test Automation - Customer View</button>
-    <button type="button" id="tradieViewBtn">Test Automation - Tradie View</button>
-  </div>
 
   <div id="customerSmsPreview" class="sms-preview" style="display:none;">
     <h2>Customer POV</h2>
@@ -283,7 +262,28 @@
     </div>
   </div>
 
+  <div class="toggle-buttons">
+    <button type="button" id="customerViewBtn">Test Automation - Customer View</button>
+    <button type="button" id="tradieViewBtn">Test Automation - Tradie View</button>
+  </div>
+
+  <form id="signupForm" autocomplete="off" novalidate>
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" placeholder="Name" required />
+
+    <label for="business">Business Name</label>
+    <input type="text" id="business" name="business" placeholder="Business Name" required />
+
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="email" placeholder="Email@example.com" required />
+
+    <label for="phone">Mobile Number</label>
+    <input type="tel" id="phone" name="phone" placeholder="0400 000 000" pattern="[0-9\s\-+]+" required />
+
+    <button type="submit">Join Waitlist</button>
+  </form>
 </main>
+
 
 <div id="loadingScreen">Joining waitlist...</div>
 
@@ -423,9 +423,9 @@
     customerBtn.disabled = false;
   });
 
-  window.addEventListener('load', () => {
-    customerBtn.click();
-  });
+ // window.addEventListener('load', () => {
+//    customerBtn.click();
+  //});
 </script>
 
 </body>
