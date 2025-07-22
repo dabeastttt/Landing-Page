@@ -28,8 +28,26 @@ function formatPhone(phone) {
   return `+${cleaned}`;
 }
 
-// Helper: delay execution for X milliseconds
+// Helper: delay execution
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Helper: send SMS with retry logic
+async function sendSmsWithRetry(msg, to, maxRetries = 2) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      await client.messages.create({
+        body: msg,
+        from: process.env.TWILIO_PHONE,
+        to: to
+      });
+      return; // success
+    } catch (err) {
+      console.error(`❌ Failed to send SMS (Attempt ${attempt + 1}):`, err.message);
+      if (attempt === maxRetries) throw err;
+      await delay(1000); // wait before retrying
+    }
+  }
+}
 
 // POST /send-sms route
 app.post('/send-sms', async (req, res) => {
@@ -37,41 +55,37 @@ app.post('/send-sms', async (req, res) => {
 
   if (!phone) return res.status(400).send('Phone number required');
 
-  const formattedPhone = formatPhone(phone);
+ 
+ const formattedPhone = formatPhone(phone);
 
-const smsMessages = [
+ const smsMessages = [
   `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
   `Here’s what’s coming: When you miss a call, your A.I. replies like this 👇`,
   `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
-  `✅ Setup will be simple — just **call forward** your number to your assigned A.I. number.`,
-  `💡 No apps or logins — just smart, automatic replies to missed calls.`,
-  `📈 You’ll get daily updates, and there’ll be a private dashboard if you want to check messages manually.`,
-  `🔥 We’re building something game-changing for tradies too busy to answer the phone. We’re rolling out over the next couple months — and you’ll be one of the first to try it.`,
+  `✅ Setup is simple: Call forward your number to your assigned A.I. number — no apps, no logins. Just smart, automatic replies and daily SMS updates. We’re building something game-changing for tradies too busy to answer the phone, and you’ll be one of the first to try it 🔥`,
 ];
 
 
   try {
-    // Save signup to Supabase
+    // Save to Supabase
     const { error } = await supabase.from('signups').insert([
       { name, business, email, phone: formattedPhone }
     ]);
+    if (error) {
+      console.error('❌ Supabase insert error:', error.message);
+      throw error;
+    }
 
-    if (error) throw error;
-
-    // Send SMS messages one by one with 1-second delay
+    // Send SMS messages one by one
     for (const msg of smsMessages) {
-      await client.messages.create({
-        body: msg,
-        from: process.env.TWILIO_PHONE,
-        to: formattedPhone
-      });
-      await delay(1000); // 1 second delay
+      await sendSmsWithRetry(msg, formattedPhone);
+      await delay(1000); // 1s delay between messages
     }
 
     // ✅ Redirect to success page
     res.redirect('/success');
   } catch (err) {
-    console.error('Error:', err);
+    console.error('❌ Error during signup:', err.message);
     res.status(500).send('Failed to onboard user');
   }
 });
@@ -87,7 +101,7 @@ app.get('/signup-count', async (req, res) => {
 
     res.json({ count: count || 0 });
   } catch (error) {
-    console.error('Error fetching signup count:', error);
+    console.error('Error fetching signup count:', error.message);
     res.status(500).json({ error: 'Failed to get signup count' });
   }
 });
