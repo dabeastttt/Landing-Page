@@ -180,10 +180,11 @@ main {
       font-weight: 600;
     }
 
-    /* SMS Flow */
-    .sms-preview {
-      margin-top: 1.5rem;
-    }
+
+/* SMS Flow */
+.sms-preview {
+  margin-top: 1.5rem;
+}
 
 .chat {  
   display: flex;
@@ -196,13 +197,14 @@ main {
 }
 
 .bubble {
-  position: relative; /* needed for tail */
+  position: relative; /* Needed for tail */
   padding: 0.9rem 1.2rem;
   border-radius: 14px;
   max-width: 85%;
   font-size: 1rem;
   animation: fadeIn 0.8s ease forwards;
   opacity: 0;
+  transform: translateY(10px); /* Ensures fadeIn animation works */
 }
 
 /* AI bubble - orange - bottom left tail */
@@ -210,7 +212,6 @@ main {
   background-color: #FF6B00;
   color: #0A0A0A;
   align-self: flex-start;
-  animation-delay: 0.2s;
 }
 .bubble.ai::after {
   content: "";
@@ -221,8 +222,7 @@ main {
   height: 0;
   border-top: 26px solid transparent;
   border-right: 26px solid #FF6B00;
-  border-bottom: 0 solid transparent;
-  transform: translateX(-50%);
+  transform: translateX(-48%);
 }
 
 /* Client bubble - dark - bottom right tail */
@@ -230,7 +230,6 @@ main {
   background-color: #2a2a2a;
   color: #fff;
   align-self: flex-end;
-  animation-delay: 1.2s;
 }
 .bubble.client::after {
   content: "";
@@ -241,13 +240,25 @@ main {
   height: 0;
   border-top: 26px solid transparent;
   border-left: 26px solid #2a2a2a;
-  border-bottom: 0 solid transparent;
-  transform: translateX(50%);
+  transform: translateX(48%);
 }
 
+/* Typing indicator */
+.bubble.typing {
+  font-weight: bold;
+  font-style: italic;
+  opacity: 0.6;
+  animation: pulse 1s infinite;
+}
 
+/* Pulse animation for typing */
+@keyframes pulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.3; }
+}
 
-/* Optional: fade-in animation */
+/* Fade in animation */
 @keyframes fadeIn {
   to {
     opacity: 1;
@@ -290,28 +301,63 @@ main {
   </span>
 </p>
 
-  <div id="customerSmsPreview" class="sms-preview" style="display:none;">
-    <h2>Lead POV</h2>
-    <div class="chat">
-      <div class="bubble ai">Hi! I’m Jake’s Plumbing A.I. assistant, here to help while Jake’s on a job — how can we assist you today?</div>
-      <div class="bubble client">Hey,Just wondering if you do blocked drains?</div>
-      <div class="bubble ai">Absolutely, we do. Want me to book you in for a quote today or tomorrow? Just leave your name and information and I’ll notify Jake now.</div>
-    </div>
+<div id="customerSmsPreview" class="sms-preview" style="display:none;">
+  <h2>Lead POV</h2>
+  <div class="chat">
+    <div class="bubble ai">Hi! I’m Jake’s Plumbing A.I. assistant, here to help while Jake’s on a job — how can we assist you today?</div>
+
+    <div class="bubble typing client" id="leadTyping1">...</div>
+    <div class="bubble client" id="leadMsg1" style="display: none;">Hey, just wondering if you do blocked drains?</div>
+
+    <div class="bubble typing ai" id="leadTyping2">...</div>
+    <div class="bubble ai" id="leadMsg2" style="display: none;">Absolutely, we do. Want me to book you in for a quote today or tomorrow? Just leave your name and information and I’ll notify Jake now.</div>
   </div>
+</div>
 
 <div id="tradieSmsPreview" class="sms-preview" style="display:none;">
   <h2>Tradie POV</h2>
-  <div class="chat"> 
+  <div class="chat">
     <div class="bubble ai">🤖 Missed call from 0412 345 678: John Smith, blocked drain, needs a quote!</div>
-    <div class="bubble ai">
-     ✅ TradeAssist A.I: I’ve followed up and locked in the lead — your call is scheduled for 1 PM, as per your preferred time.
-      Reply with <strong>ACCEPT</strong> or <strong>DECLINE</strong> to confirm.
+
+    <div class="bubble typing ai" id="tradieTyping1">...</div>
+    <div class="bubble ai" id="tradieMsg1" style="display: none;">
+      ✅ TradeAssist A.I: I’ve followed up and locked in the lead — your call is scheduled for 1 PM, as per your preferred time.
+      <br>Reply with <strong>ACCEPT</strong> or <strong>DECLINE</strong> to confirm.
     </div>
-    <div class="bubble client" style="animation-delay: 0.9s;">
-     Accept. Cheers for keeping the lead warm, just got back from smoko and locked in the booking.
+
+    <div class="bubble typing client" id="tradieTyping2">...</div>
+    <div class="bubble client" id="tradieMsg2" style="display: none;">
+      Accept. Cheers for keeping the lead warm, just got back from smoko and locked in the booking.
     </div>
   </div>
 </div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Lead POV timings
+    setTimeout(() => {
+      document.getElementById('leadTyping1').style.display = 'none';
+      document.getElementById('leadMsg1').style.display = 'block';
+    }, 1000);
+
+    setTimeout(() => {
+      document.getElementById('leadTyping2').style.display = 'none';
+      document.getElementById('leadMsg2').style.display = 'block';
+    }, 2000);
+
+    // Tradie POV timings
+    setTimeout(() => {
+      document.getElementById('tradieTyping1').style.display = 'none';
+      document.getElementById('tradieMsg1').style.display = 'block';
+    }, 1000);
+
+    setTimeout(() => {
+      document.getElementById('tradieTyping2').style.display = 'none';
+      document.getElementById('tradieMsg2').style.display = 'block';
+    }, 2000);
+  });
+</script>
+
 
 
   <div class="toggle-buttons" style="margin-bottom: 2rem;">
