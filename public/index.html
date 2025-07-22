@@ -186,7 +186,7 @@ main {
   margin-top: 1.5rem;
 }
 
-.chat {  
+.chat {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -194,50 +194,54 @@ main {
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 0 12px #FF6B0055;
+  position: relative;
+  overflow: visible;
 }
 
 .bubble {
-  position: relative; /* Needed for tail */
+  position: relative;
   padding: 0.9rem 1.2rem;
   border-radius: 14px;
   max-width: 85%;
   font-size: 1rem;
-  animation: fadeIn 0.8s ease forwards;
+  line-height: 1.4;
   opacity: 0;
-  transform: translateY(10px); /* Ensures fadeIn animation works */
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* AI bubble - orange - bottom left tail */
+.bubble.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .bubble.ai {
   background-color: #FF6B00;
   color: #0A0A0A;
   align-self: flex-start;
 }
+
 .bubble.ai::after {
   content: "";
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0;
-  height: 0;
   border-top: 26px solid transparent;
   border-right: 26px solid #FF6B00;
   transform: translateX(-48%);
 }
 
-/* Client bubble - dark - bottom right tail */
 .bubble.client {
   background-color: #2a2a2a;
   color: #fff;
   align-self: flex-end;
 }
+
 .bubble.client::after {
   content: "";
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 0;
-  height: 0;
   border-top: 26px solid transparent;
   border-left: 26px solid #2a2a2a;
   transform: translateX(48%);
@@ -258,13 +262,6 @@ main {
   100% { opacity: 0.3; }
 }
 
-/* Fade in animation */
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
   </style>
 </head>
@@ -333,8 +330,21 @@ main {
 </div>
 
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    // Lead POV timings
+  function resetSmsPreviews() {
+    // Hide both views
+    document.getElementById('customerSmsPreview').style.display = 'none';
+    document.getElementById('tradieSmsPreview').style.display = 'none';
+
+    // Reset all bubbles
+    const allTyping = document.querySelectorAll('.bubble.typing');
+    const allMessages = document.querySelectorAll('.bubble[style*="display: none"]');
+    allTyping.forEach(b => b.style.display = 'block');
+    allMessages.forEach(b => b.style.display = 'none');
+  }
+
+  function triggerCustomerFlow() {
+    document.getElementById('customerSmsPreview').style.display = 'block';
+
     setTimeout(() => {
       document.getElementById('leadTyping1').style.display = 'none';
       document.getElementById('leadMsg1').style.display = 'block';
@@ -344,8 +354,11 @@ main {
       document.getElementById('leadTyping2').style.display = 'none';
       document.getElementById('leadMsg2').style.display = 'block';
     }, 2000);
+  }
 
-    // Tradie POV timings
+  function triggerTradieFlow() {
+    document.getElementById('tradieSmsPreview').style.display = 'block';
+
     setTimeout(() => {
       document.getElementById('tradieTyping1').style.display = 'none';
       document.getElementById('tradieMsg1').style.display = 'block';
@@ -355,8 +368,20 @@ main {
       document.getElementById('tradieTyping2').style.display = 'none';
       document.getElementById('tradieMsg2').style.display = 'block';
     }, 2000);
+  }
+
+  // Event listeners for buttons
+  document.getElementById('customerViewBtn').addEventListener('click', () => {
+    resetSmsPreviews();
+    triggerCustomerFlow();
+  });
+
+  document.getElementById('tradieViewBtn').addEventListener('click', () => {
+    resetSmsPreviews();
+    triggerTradieFlow();
   });
 </script>
+
 
 
 
