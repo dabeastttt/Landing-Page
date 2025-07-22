@@ -311,6 +311,7 @@ main {
   </div>
 </div>
 
+
 <div id="tradieSmsPreview" class="sms-preview" style="display:none;">
   <h2>Tradie POV</h2>
   <div class="chat">
@@ -331,59 +332,60 @@ main {
 
 <script>
   function resetSmsPreviews() {
-    // Hide both views
-    document.getElementById('customerSmsPreview').style.display = 'none';
-    document.getElementById('tradieSmsPreview').style.display = 'none';
+  // Hide both views
+  document.getElementById('customerSmsPreview').style.display = 'none';
+  document.getElementById('tradieSmsPreview').style.display = 'none';
 
-    // Show all typing indicators
-    document.querySelectorAll('.bubble.typing').forEach(b => {
-      b.style.display = 'block';
-    });
-
-    // Hide all message bubbles (non-typing)
-    document.querySelectorAll('.bubble:not(.typing)').forEach(b => {
-      b.classList.remove('show');
-    });
-  }
-
-  function triggerCustomerFlow() {
-    document.getElementById('customerSmsPreview').style.display = 'block';
-
-    setTimeout(() => {
-      document.getElementById('leadTyping1').style.display = 'none';
-      document.getElementById('leadMsg1').classList.add('show');
-    }, 1000);
-
-    setTimeout(() => {
-      document.getElementById('leadTyping2').style.display = 'none';
-      document.getElementById('leadMsg2').classList.add('show');
-    }, 2000);
-  }
-
-  function triggerTradieFlow() {
-    document.getElementById('tradieSmsPreview').style.display = 'block';
-
-    setTimeout(() => {
-      document.getElementById('tradieTyping1').style.display = 'none';
-      document.getElementById('tradieMsg1').classList.add('show');
-    }, 1000);
-
-    setTimeout(() => {
-      document.getElementById('tradieTyping2').style.display = 'none';
-      document.getElementById('tradieMsg2').classList.add('show');
-    }, 2000);
-  }
-
-  // Event listeners for buttons
-  document.getElementById('customerViewBtn').addEventListener('click', () => {
-    resetSmsPreviews();
-    triggerCustomerFlow();
+  // Show all typing indicators
+  document.querySelectorAll('.bubble.typing').forEach(b => {
+    b.style.display = 'block';
   });
 
-  document.getElementById('tradieViewBtn').addEventListener('click', () => {
-    resetSmsPreviews();
-    triggerTradieFlow();
+  // Remove 'show' class from all message bubbles (non-typing)
+  document.querySelectorAll('.bubble:not(.typing)').forEach(b => {
+    b.classList.remove('show');
   });
+}
+
+function triggerCustomerFlow() {
+  document.getElementById('customerSmsPreview').style.display = 'block';
+
+  setTimeout(() => {
+    document.getElementById('leadTyping1').style.display = 'none';
+    document.getElementById('leadMsg1').classList.add('show');
+  }, 1000);
+
+  setTimeout(() => {
+    document.getElementById('leadTyping2').style.display = 'none';
+    document.getElementById('leadMsg2').classList.add('show');
+  }, 2000);
+}
+
+function triggerTradieFlow() {
+  document.getElementById('tradieSmsPreview').style.display = 'block';
+
+  setTimeout(() => {
+    document.getElementById('tradieTyping1').style.display = 'none';
+    document.getElementById('tradieMsg1').classList.add('show');
+  }, 1000);
+
+  setTimeout(() => {
+    document.getElementById('tradieTyping2').style.display = 'none';
+    document.getElementById('tradieMsg2').classList.add('show');
+  }, 2000);
+}
+
+// Event listeners for buttons
+document.getElementById('customerViewBtn').addEventListener('click', () => {
+  resetSmsPreviews();
+  triggerCustomerFlow();
+});
+
+document.getElementById('tradieViewBtn').addEventListener('click', () => {
+  resetSmsPreviews();
+  triggerTradieFlow();
+});
+
 </script>
 
 
