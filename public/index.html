@@ -270,20 +270,26 @@ main {
   <div id="customerSmsPreview" class="sms-preview" style="display:none;">
     <h2>Lead POV</h2>
     <div class="chat">
-      <div class="bubble ai">Hi! You’ve reached Jake's Plumbing. Jake’s currently on a job — how can we help 🙂?</div>
-      <div class="bubble client">Hey! Just wondering if you do blocked drains?</div>
+      <div class="bubble ai">Hi! I’m Jake’s Plumbing A.I. assistant, here to help while Jake’s on a job — how can we assist you today?</div>
+      <div class="bubble client">Hey,Just wondering if you do blocked drains?</div>
       <div class="bubble ai">Absolutely, we do. Want me to book you in for a quote today or tomorrow? Just leave your name and information and I’ll notify Jake now.</div>
     </div>
   </div>
 
-  <div id="tradieSmsPreview" class="sms-preview" style="display:none;">
-    <h2>Tradie POV</h2>
-<div class="chat"> 
-  <div class="bubble ai">🤖 Missed call from 0412 345 678: John Smith, blocked drain, needs a quote!</div>
-  <div class="bubble ai">TradeAssist A.I: I followed and booked with the lead — a call scheduled at 1 pm</div>
-  <div class="bubble client">Got it. I just confirmed the appointment for tomorrow at 3 PM.</div>
-</div>
+<div id="tradieSmsPreview" class="sms-preview" style="display:none;">
+  <h2>Tradie POV</h2>
+  <div class="chat"> 
+    <div class="bubble ai">🤖 Missed call from 0412 345 678: John Smith, blocked drain, needs a quote!</div>
+    <div class="bubble ai">
+      ✅  TradeAssist A.I: Followed up and booked  the lead — you have a call scheduled at 1 pm.<br>
+      Reply with <strong>ACCEPT</strong> or <strong>DECLINE</strong> to confirm.
+    </div>
+    <div class="bubble client" style="animation-delay: 0.6s;">
+     Decline. I just got back from smoko and confirmed the booking,thanks for keeping the lead warm!
+    </div>
   </div>
+</div>
+
 
   <div class="toggle-buttons" style="margin-bottom: 2rem;">
   <button type="button" id="customerViewBtn">Test Automation - Lead View</button>
