@@ -111,7 +111,9 @@ app.get('/success', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'success.html'));
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`✅ Server running at http://localhost:${port}`);
+const host = process.env.HOST || '0.0.0.0';
+
+app.listen(port, host, () => {
+  console.log(`✅ Server running at http://${host}:${port}`);
 });
+
