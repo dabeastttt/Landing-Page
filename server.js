@@ -37,10 +37,18 @@ app.post('/send-sms', async (req, res) => {
   const formattedPhone = formatPhone(phone);
 
   const smsMessages = [
-    `G'day ${business || 'mate'}! Welcome to TradeAssist A.I 👷‍♂️ We're stoked to have you onboard.`,
-    `Here's how it works: When you miss a call, your A.I. instantly follows up with a reply like this 👇`,
-    `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
-  ];
+  `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
+  `We’re building something game-changing for tradies who are too busy to answer the phone — and you’ll be one of the first to try it.`,
+  `Here’s what’s coming: When you miss a call, your A.I. instantly replies like this 👇`,
+  `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
+  `✅ Setup’s dead simple — just call forward your number to your A.I. number. It works straight out of the box on both Apple and Android. No stress.`,
+  `💡 Once that’s done, it’s set-and-forget. No apps, no logins, just smart replies to missed calls — automatically.`,
+  `📲 Your A.I. handles enquiries via SMS and logs everything for you. No more lost leads.`,
+  `📈 You’ll even get daily updates on how many jobs or questions came in.`,
+  `🧰 And if you want to check messages manually, we’ll have a private dashboard ready for you.`,
+  `🔥 We’ll be rolling out to early users over the next couple months — so hang tight, and we’ll text you as soon as you’re up!`,
+];
+
 
   try {
     // Save signup to Supabase
