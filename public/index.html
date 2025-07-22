@@ -221,33 +221,36 @@ main {
   animation-delay: 1.2s;
 }
 
-/* Tail for AI bubble - bottom left */
+/* Tail for AI bubble - bottom left corner */
 .bubble.ai::after {
   content: "";
   position: absolute;
-  bottom: -8px;
-  left: 20px;
+  bottom: 6px;
+  left: -8px;
   width: 0;
   height: 0;
   border: 10px solid transparent;
-  border-top-color: #FF6B00;
-  border-bottom: 0;
-  transform: rotate(45deg);
+  border-right-color: #FF6B00;
+  border-left: 0;
+  border-top: 0;
+  transform: rotate(0deg);
 }
 
-/* Tail for Client bubble - bottom right */
+/* Tail for Client bubble - bottom right corner */
 .bubble.client::after {
   content: "";
   position: absolute;
-  bottom: -8px;
-  right: 20px;
+  bottom: 6px;
+  right: -8px;
   width: 0;
   height: 0;
   border: 10px solid transparent;
-  border-top-color: #2a2a2a;
-  border-bottom: 0;
-  transform: rotate(-45deg);
+  border-left-color: #2a2a2a;
+  border-right: 0;
+  border-top: 0;
+  transform: rotate(0deg);
 }
+
 
 /* Optional: fade-in animation */
 @keyframes fadeIn {
