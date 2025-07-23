@@ -58,11 +58,11 @@ app.post('/send-sms', async (req, res) => {
  
  const formattedPhone = formatPhone(phone);
 
- const smsMessages = [
-  `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
-  `Here’s what’s coming: When you miss a call, your A.I instantly replies like this 👇`,
-  `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
-  `✅ Setup is effortless — no apps, no logins. Just sign up, set it and forget it. Your AI handles replies and daily SMS updates so you can focus on the job. No sick days, no pay rises, just less admin and smarter work. Be among the first to try this game-changer for tradies on the go 🔥`,
+const smsMessages = [
+  `G’DAY ${name?.toUpperCase() || 'MATE'}! YOU’RE ON THE TRADEASSIST A.I WAITLIST 👷‍♂️`,
+  `WHEN YOU MISS A CALL, OUR AI REPLIES INSTANTLY 👇`,
+  `"Hi, this is ${business}’s AI assistant. On the tools right now — reply here to book a job, get a quote, or ask a question ✍🏽."`,
+  `✅ SETUP’S EASY — NO APPS, NO LOGINS.\nJUST SIGN UP, SET IT & FORGET IT.\nNO SICK DAYS, NO PAY RISES, LESS ADMIN AND MORE TIME. GET READY TO WORK SMARTER 🔥`,
 ];
 
 
