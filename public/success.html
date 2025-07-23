@@ -5,13 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Success — TradeAssist A.I</title>
   <style>
+    :root {
+      --orange: #FF6B00;
+      --orange-light: #FF914D;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body, html {
       margin: 0;
       padding: 0;
-      height: 100vh;
+      height: 100%;
       overflow: hidden;
       background: #0A0A0A;
-      color: #FF6B00;
+      color: var(--orange);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       justify-content: center;
@@ -33,8 +42,9 @@
       z-index: 1;
       background: rgba(30, 30, 30, 0.85);
       border-radius: 16px;
-      padding: 2.5rem 2rem;
-      max-width: 360px;
+      padding: 2.5rem 1.5rem;
+      max-width: 400px;
+      width: 90%;
       text-align: center;
       margin: 3rem auto;
       box-shadow:
@@ -73,8 +83,8 @@
     }
 
     .glow-icon {
-      width: 120px;
-      height: 120px;
+      width: clamp(80px, 20vw, 120px);
+      height: clamp(80px, 20vw, 120px);
       filter: drop-shadow(0 0 12px #FF6B00cc);
       animation: glowPulse 3s ease-in-out infinite;
       display: block;
@@ -91,35 +101,45 @@
     }
 
     h1 {
-      font-size: 2.8rem;
+      font-size: clamp(1.6rem, 6vw, 2.6rem);
       font-weight: 900;
       margin: 0.5rem 0 1rem;
       text-shadow: 0 0 15px #FF6B00bb;
-      color: #FF6B00;
+      color: var(--orange);
     }
 
     p {
-      font-size: 1.25rem;
+      font-size: clamp(1rem, 4vw, 1.25rem);
       margin-bottom: 2rem;
-      color: #FF914Dcc;
+      color: var(--orange-light);
+      line-height: 1.5;
     }
 
     a {
+      display: inline-block;
       text-decoration: none;
       color: #0A0A0A;
-      background: #FF6B00;
-      padding: 12px 25px;
+      background: var(--orange);
+      padding: 0.75rem 1.5rem;
       font-weight: 700;
       border-radius: 12px;
       box-shadow: 0 6px 18px #FF914D88;
       transition: background 0.3s ease, color 0.3s ease;
+      font-size: 1rem;
     }
 
     a:hover, a:focus {
-      background: #FF914D;
+      background: var(--orange-light);
       color: #0A0A0A;
       box-shadow: 0 8px 24px #FF914Dcc;
       outline: none;
+    }
+
+    @media (max-height: 600px) {
+      .success-box {
+        margin: 1.5rem auto;
+        padding: 1.5rem 1rem;
+      }
     }
   </style>
 </head>
@@ -142,65 +162,74 @@
       </svg>
     </div>
 
-     <h1>Thanks for Joining the Waitlist!</h1>
-      <p>We’ll be in touch soon with early access updates.<br>You're officially on the list!</p>
-      <a href="/">Back to Home</a>
+    <h1>Thanks for Joining the Waitlist!</h1>
+    <p>
+      We’ll be in touch soon with early access updates.<br>
+      You're officially on the list!<br>
+      <strong id="waitlistPosition" style="color: var(--orange-light);"></strong>
+    </p>
+    <a href="/">Back to Home</a>
   </div>
 
-<script>
-  const canvas = document.getElementById('matrixCanvas');
-  const ctx = canvas.getContext('2d');
-  const fontSize = 20;
-  let columns, drops;
+  <script>
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    const fontSize = 20;
+    let columns, drops;
 
-  // Tool-inspired symbols (Unicode characters, including wrench + toolbox)
-  const symbols = [
-    '⊗', // bolt/nut
-    '⛏', // pickaxe
-    '⚒', // crossed hammers
-    '⛓', // chain
-    '🛠', // hammer & wrench combo
-    '🗜', // clamp/wrench
-    '⚙', // gear
-    '⛭', // gear alt
-    '✚', // screw tip
-    '╬', // steel bar
-    '♯', // bolt sharp
-    '†', // bolt cross
-    '☗', // chisel edge
-    '╧', // wrench jaw
-    '#', '%', '&', '*', '+', '=', '-', '|', '/', '\\'
-  ];
+    const symbols = [
+      '⊗', '⛏', '⚒', '⛓', '🛠', '🗜', '⚙', '⛭', '✚',
+      '╬', '♯', '†', '☗', '╧', '#', '%', '&', '*', '+', '=', '-', '|', '/', '\\'
+    ];
 
-  function initMatrix() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
-  }
-
-  function drawMatrix() {
-    ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#FF6B00';
-    ctx.font = fontSize + 'px monospace';
-
-    for (let i = 0; i < columns; i++) {
-      const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-      ctx.fillText(symbol, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i] += 1;
+    function initMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array(columns).fill(1);
     }
 
-    requestAnimationFrame(drawMatrix);
-  }
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#FF6B00';
+      ctx.font = fontSize + 'px monospace';
 
-  window.addEventListener('resize', initMatrix);
-  initMatrix();
-  drawMatrix();
-</script>
+      for (let i = 0; i < columns; i++) {
+        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        ctx.fillText(symbol, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i] += 1;
+      }
+
+      requestAnimationFrame(drawMatrix);
+    }
+
+    window.addEventListener('resize', initMatrix);
+    initMatrix();
+    drawMatrix();
+
+    // 🎯 Fetch waitlist position and show it
+    async function showWaitlistPosition() {
+      try {
+        const res = await fetch('/signup-count');
+        if (!res.ok) throw new Error('Failed to fetch waitlist count');
+        const data = await res.json();
+        const count = data.count || 0;
+
+        const positionEl = document.getElementById('waitlistPosition');
+        positionEl.innerHTML = `🔥 You’re #${count} on the waitlist.`;
+      } catch (err) {
+        console.error('Could not fetch waitlist position:', err);
+      }
+    }
+
+    showWaitlistPosition();
+  </script>
 </body>
 </html>
+
+
