@@ -44,7 +44,7 @@ async function sendSmsWithRetry(msg, to, maxRetries = 2) {
     } catch (err) {
       console.error(`❌ Failed to send SMS (Attempt ${attempt + 1}):`, err.message);
       if (attempt === maxRetries) throw err;
-      await delay(1000); // wait before retrying
+      await delay(2500); // wait before retrying
     }
   }
 }
@@ -60,9 +60,9 @@ app.post('/send-sms', async (req, res) => {
 
  const smsMessages = [
   `G'day ${name || 'mate'}! You’re officially on the waitlist for TradeAssist A.I 👷‍♂️`,
-  `Here’s what’s coming: When you miss a call, your A.I. replies like this 👇`,
+  `Here’s what’s coming: When you miss a call, your A.I instantly replies like this 👇`,
   `"Hi, this is ${business}’s A.I assistant. They’re on the tools right now — You can book a job, get a quote, or ask a question by replying here ✍🏽."`,
-  `✅ Setup is simple: Call forward your number to your assigned A.I. number — no apps, no logins. Just smart, automatic replies and daily SMS updates. We’re building something game-changing for tradies too busy to answer the phone, and you’ll be one of the first to try it 🔥`,
+  `✅ Setup is effortless — no apps, no logins. Just sign up, set it and forget it. Your AI handles replies and daily SMS updates so you can focus on the job. No sick days, no pay rises, just less admin and smarter work. Be among the first to try this game-changer for tradies on the go 🔥`,
 ];
 
 
