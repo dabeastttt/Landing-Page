@@ -253,6 +253,17 @@ main {
     transform: translateY(0);
   }
 }
+
+.loading-screen {
+  text-align: center;
+  padding: 2rem;
+  background-color: #121212;
+  color: white;
+  border-radius: 12px;
+  margin-top: 2rem;
+  box-shadow: 0 0 12px #FF6B0055;
+}
+
   </style>
 </head>
 <body>
@@ -340,8 +351,15 @@ main {
   </form>
 </main>
 
+<div id="loadingScreen" class="loading-screen">
+  <h2 style="font-family: 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 1.6rem; margin-bottom: 0.5rem;">
+    Securing your spot! Here's how fast your AI will respond 👇
+  </h2>
+  <p style="font-family: 'Segoe UI', Roboto, sans-serif; font-size: 1.05rem; color: #ccc;">
+    Watch your messages — you're getting a real-time preview of TradeAssist AI in action.
+  </p>
+</div>
 
-<div id="loadingScreen">Joining waitlist...</div>
 
 <script>
   const canvas = document.getElementById('matrixCanvas');
