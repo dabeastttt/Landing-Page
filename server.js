@@ -62,7 +62,7 @@ const smsMessages = [
   `G’DAY ${name?.toUpperCase() || 'MATE'}! YOU’RE ON THE TRADEASSIST A.I WAITLIST 👷‍♂️`,
   `WHEN YOU MISS A CALL, OUR AI REPLIES INSTANTLY 👇`,
   `"Hi, this is ${business}’s AI assistant. On the tools right now — reply here to book a job, get a quote, or ask a question ✍🏽."`,
-  `✅ SETUP’S EASY — NO APPS, NO LOGINS.\nJUST SIGN UP, SET IT & FORGET IT.\nNO SICK DAYS, NO PAY RISES, LESS ADMIN AND MORE TIME. GET READY TO WORK SMARTER 🔥`,
+  `✅ SETUP’S EASY — NO APPS, NO LOGINS.\nJUST SIGN UP, SET IT & FORGET IT.\nNO SICK DAYS, NO PAY RISES, MORE TIME AND LESS ADMIN. GET READY TO WORK SMARTER 🔥`,
 ];
 
 
