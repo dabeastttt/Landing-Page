@@ -37,23 +37,31 @@
       background: #0A0A0A;
     }
 
-    .success-box {
-      position: relative;
-      z-index: 1;
-      background: rgba(30, 30, 30, 0.85);
-      border-radius: 16px;
-      padding: 2.5rem 1.5rem;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      margin: 3rem auto;
-      box-shadow:
-        0 0 16px 4px #FF6B0088,
-        inset 0 0 10px 2px #FF6B0044;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 1s ease forwards 0.4s;
-    }
+.success-box {
+  position: relative;
+  z-index: 10;
+  max-width: 280px;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 2rem auto;
+  background: rgba(30, 30, 30, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem 1.5rem;
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* 🔥 REMOVE THIS LINE to kill the glow */
+  /* box-shadow: 0 0 20px #FF914D88; */
+
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s ease forwards 0.4s;
+}
+
+
+
 
     @keyframes fadeInUp {
       to {
@@ -171,64 +179,103 @@
   </div>
 
   <script>
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    const fontSize = 20;
-    let columns, drops;
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
 
-    const symbols = [
-      '⊗', '⛏', '⚒', '⛓', '🛠', '🗜', '⚙', '⛭', '✚',
-      '╬', '♯', '†', '☗', '╧', '#', '%', '&', '*', '+', '=', '-', '|', '/', '\\'
-    ];
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-    function initMatrix() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      columns = Math.floor(canvas.width / fontSize);
-      drops = Array(columns).fill(1);
+  const particlesArray = [];
+  const numberOfParticles = 100;
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = 2;
+      this.baseX = this.x;
+      this.baseY = this.y;
+      this.dx = (Math.random() - 0.5) * 1.5;
+      this.dy = (Math.random() - 0.5) * 1.5;
     }
 
-    function drawMatrix() {
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    update() {
+      this.x += this.dx;
+      this.y += this.dy;
+
+      // bounce off edges
+      if (this.x <= 0 || this.x >= canvas.width) this.dx *= -1;
+      if (this.y <= 0 || this.y >= canvas.height) this.dy *= -1;
+    }
+
+    draw() {
       ctx.fillStyle = '#FF6B00';
-      ctx.font = fontSize + 'px monospace';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
 
-      for (let i = 0; i < columns; i++) {
-        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-        ctx.fillText(symbol, i * fontSize, drops[i] * fontSize);
+  function connect() {
+    for (let a = 0; a < particlesArray.length; a++) {
+      for (let b = a + 1; b < particlesArray.length; b++) {
+        const dx = particlesArray[a].x - particlesArray[b].x;
+        const dy = particlesArray[a].y - particlesArray[b].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
+        if (distance < 120) {
+          ctx.strokeStyle = 'rgba(255, 107, 0, 0.1)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+          ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+          ctx.stroke();
         }
-        drops[i] += 1;
-      }
-
-      requestAnimationFrame(drawMatrix);
-    }
-
-    window.addEventListener('resize', initMatrix);
-    initMatrix();
-    drawMatrix();
-
-    // 🎯 Fetch waitlist position and show it
-    async function showWaitlistPosition() {
-      try {
-        const res = await fetch('/signup-count');
-        if (!res.ok) throw new Error('Failed to fetch waitlist count');
-        const data = await res.json();
-        const count = data.count || 0;
-
-        const positionEl = document.getElementById('waitlistPosition');
-        positionEl.innerHTML = `🔥 You’re #${count} on the waitlist.`;
-      } catch (err) {
-        console.error('Could not fetch waitlist position:', err);
       }
     }
+  }
 
-    showWaitlistPosition();
-  </script>
-</body>
-</html>
+  function init() {
+    particlesArray.length = 0;
+    for (let i = 0; i < numberOfParticles; i++) {
+      particlesArray.push(new Particle());
+    }
+  }
 
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particlesArray.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    connect();
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+  });
+
+  init();
+  animate();
+
+  // 🎯 Fetch waitlist position and show it
+  async function showWaitlistPosition() {
+    try {
+      const res = await fetch('/signup-count');
+      if (!res.ok) throw new Error('Failed to fetch waitlist count');
+      const data = await res.json();
+      const count = data.count || 0;
+
+      const positionEl = document.getElementById('waitlistPosition');
+      positionEl.innerHTML = `🔥 You’re #${count} on the waitlist.`;
+    } catch (err) {
+      console.error('Could not fetch waitlist position:', err);
+    }
+  }
+
+  showWaitlistPosition();
+</script>
 

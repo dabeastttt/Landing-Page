@@ -45,39 +45,40 @@ body, html {
   pointer-events: none;
 }
 
-/* Main Panel */
 main {
   position: relative;
   z-index: 10;
-  max-width: 400px;         /* a bit narrower for more right space */
-  width: 85%;               /* smaller width for breathing room */
-  margin: 5vh auto 2vh auto;
-  height: 85vh;             
-  padding: 2.5rem 1.5rem;   /* less side padding */
-  background: #1E1E1E;
-  border-radius: 24px;
-  box-shadow: 0 0 16px #FF914D88;
-  overflow-y: auto;
+  max-width: 340px;          /* narrower */
+  max-height: 85vh;          /* max height relative to viewport */
+  overflow-y: auto;          /* enable vertical scroll if content overflows */
+  overflow-x: hidden;
+  margin: 2rem auto;
+  background: rgba(30, 30, 30, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 0 20px #FF914D88;
+  padding: 1.5rem 1.5rem;    /* tighter padding */
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
+.glow-icon {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 0 6px #FF6B0099); /* less blur, less opacity */
+  animation: glowPulse 3s ease-in-out infinite;
+}   
 
-    .glow-icon {
-      display: block;
-      margin: 0 auto 1.5rem auto;
-      width: 120px;
-      height: 120px;
-      filter: drop-shadow(0 0 12px #FF6B00CC);
-      animation: glowPulse 3s ease-in-out infinite;
-    }
+@keyframes glowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px #FF6B0088); /* lighter glow */
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #FF914D99); /* toned down peak glow */
+  }
+}
 
-    @keyframes glowPulse {
-      0%, 100% {
-        filter: drop-shadow(0 0 8px #FF6B00AA);
-      }
-      50% {
-        filter: drop-shadow(0 0 16px #FF914DCC);
-      }
-    }
 
     h1 {
       font-weight: 900;
@@ -358,68 +359,90 @@ main {
 </div>
 
 
-
 <script>
   const canvas = document.getElementById('matrixCanvas');
   const ctx = canvas.getContext('2d');
-  const fontSize = 20;
-  let columns, drops;
 
-  // Tool-inspired symbols (Unicode characters, including wrench + toolbox)
-  const symbols = [
-    '⊗', '⛏', '⚒', '⛓', '🛠', '🗜', '⚙', '⛭',
-    '✚', '╬', '♯', '†', '☗', '╧',
-    '#', '%', '&', '*', '+', '=', '-', '|', '/', '\\'
-  ];
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-  function initMatrix() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
-  }
+  const particlesArray = [];
+  const numberOfParticles = 100;
 
-  function drawMatrix() {
-    ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#FF6B00';
-    ctx.font = fontSize + 'px monospace';
-
-    for (let i = 0; i < columns; i++) {
-      const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-      ctx.fillText(symbol, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i] += 0.3;
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = 2;
+      this.baseX = this.x;
+      this.baseY = this.y;
+      this.dx = (Math.random() - 0.5) * 1.5;
+      this.dy = (Math.random() - 0.5) * 1.5;
     }
 
-    requestAnimationFrame(drawMatrix);
+    update() {
+      this.x += this.dx;
+      this.y += this.dy;
+
+      // bounce off edges
+      if (this.x <= 0 || this.x >= canvas.width) this.dx *= -1;
+      if (this.y <= 0 || this.y >= canvas.height) this.dy *= -1;
+    }
+
+    draw() {
+      ctx.fillStyle = '#FF6B00';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
-  let resizeTimeout;
-  let lastWidth = window.innerWidth;
-  let lastHeight = window.innerHeight;
+  function connect() {
+    for (let a = 0; a < particlesArray.length; a++) {
+      for (let b = a + 1; b < particlesArray.length; b++) {
+        const dx = particlesArray[a].x - particlesArray[b].x;
+        const dy = particlesArray[a].y - particlesArray[b].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 120) {
+          ctx.strokeStyle = 'rgba(255, 107, 0, 0.1)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+          ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function init() {
+    particlesArray.length = 0;
+    for (let i = 0; i < numberOfParticles; i++) {
+      particlesArray.push(new Particle());
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particlesArray.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    connect();
+    requestAnimationFrame(animate);
+  }
 
   window.addEventListener('resize', () => {
-    const nowWidth = window.innerWidth;
-    const nowHeight = window.innerHeight;
-
-    if (Math.abs(nowWidth - lastWidth) > 10 || Math.abs(nowHeight - lastHeight) > 10) {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        initMatrix();
-        lastWidth = nowWidth;
-        lastHeight = nowHeight;
-      }, 300);
-    }
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
   });
 
-  // Start the matrix animation
-  initMatrix();
-  drawMatrix();
+  init();
+  animate();
 </script>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
