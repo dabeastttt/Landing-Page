@@ -48,7 +48,7 @@ async function sendSmsWithRetry(msg, to, maxRetries = 2) {
       });
       return;
     } catch (err) {
-      console.error(`❌ SMS attempt ${attempt + 1} failed:`, err.message);
+      console.error(`❌ Failed to send SMS (Attempt ${attempt + 1}):`, err.message);
       if (attempt === maxRetries) throw err;
       await delay(2500);
     }
@@ -62,10 +62,12 @@ app.post('/send-sms', async (req, res) => {
 
   const formattedPhone = formatPhone(phone);
 
-  // Define messages
-  const introMsg = `You’re in! You just joined TradeAssist's free waitlist.\nGo on smoko while you’re technically still working.`;
-  const upAndGoMsg = `Smash that Up & Go 💪 TGIF — Thank God It's Friday 🔧🍻`;
-  const snagMsg = `Smash that snag 🌭 TGIF — Thank God It's Friday, legend 🍻`;
+  const smsMessages = [
+    `G'day ${name || 'legend'}, you're in the TradeAssist waitlist!`,
+    `When you miss a call, our AI replies instantly.`,
+    `Hi, this is ${business || 'your tradie'}’s AI assistant. On the tools right now — reply here to book a job, get a quote, or ask a question.`,
+    `Setup’s easy. No apps, no logins. Just your number. Too easy.`
+  ];
 
   try {
     // Save to Supabase
@@ -73,28 +75,20 @@ app.post('/send-sms', async (req, res) => {
       { name, business, email, phone: formattedPhone }
     ]);
     if (error) {
-      console.error('❌ Supabase error:', error.message);
+      console.error('❌ Supabase insert error:', error.message);
       throw error;
     }
 
-    // Send first wave immediately
-    await sendSmsWithRetry(introMsg, formattedPhone);
-    await sendSmsWithRetry(upAndGoMsg, formattedPhone);
+    // Send messages with 1-second delay between each
+    for (const msg of smsMessages) {
+      await sendSmsWithRetry(msg, formattedPhone);
+      await delay(1000); // 1 second delay
+    }
 
-    // Wait 30s, then send second wave
-    setTimeout(async () => {
-      try {
-        await sendSmsWithRetry(introMsg, formattedPhone);
-        await sendSmsWithRetry(snagMsg, formattedPhone);
-      } catch (err) {
-        console.error('❌ Delayed SMS error:', err.message);
-      }
-    }, 30 * 1000);
-
-    // Redirect to success
+    // ✅ Redirect to success page
     res.redirect('/success');
   } catch (err) {
-    console.error('❌ Error in /send-sms:', err.message);
+    console.error('❌ Error during signup:', err.message);
     res.status(500).send('Failed to onboard user');
   }
 });
@@ -107,14 +101,15 @@ app.get('/signup-count', async (req, res) => {
       .select('*', { count: 'exact', head: true });
 
     if (error) throw error;
+
     res.json({ count: count || 0 });
   } catch (error) {
-    console.error('❌ Count error:', error.message);
+    console.error('Error fetching signup count:', error.message);
     res.status(500).json({ error: 'Failed to get signup count' });
   }
 });
 
-// Success page
+// Serve success page
 app.get('/success', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'success.html'));
 });
