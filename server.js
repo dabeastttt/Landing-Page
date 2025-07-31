@@ -8,18 +8,24 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Initialize Supabase client
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+// Supabase
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-// Twilio client
-const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+// Twilio
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static('public')); // Serve static files from /public
+app.use(express.static('public'));
 
-// Helper: format phone number to E.164 with +61 for Australia
+// Format phone numbers
 function formatPhone(phone) {
   const cleaned = phone.replace(/\D/g, '');
   if (cleaned.startsWith('0')) return `+61${cleaned.slice(1)}`;
@@ -28,10 +34,10 @@ function formatPhone(phone) {
   return `+${cleaned}`;
 }
 
-// Helper: delay execution
+// Delay helper
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Helper: send SMS with retry logic
+// Send SMS with retry
 async function sendSmsWithRetry(msg, to, maxRetries = 2) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -40,31 +46,26 @@ async function sendSmsWithRetry(msg, to, maxRetries = 2) {
         from: process.env.TWILIO_PHONE,
         to: to
       });
-      return; // success
+      return;
     } catch (err) {
-      console.error(`❌ Failed to send SMS (Attempt ${attempt + 1}):`, err.message);
+      console.error(`❌ SMS attempt ${attempt + 1} failed:`, err.message);
       if (attempt === maxRetries) throw err;
-      await delay(2500); // wait before retrying
+      await delay(2500);
     }
   }
 }
 
-// POST /send-sms route
+// POST /send-sms
 app.post('/send-sms', async (req, res) => {
   const { name, business, email, phone } = req.body;
-
   if (!phone) return res.status(400).send('Phone number required');
 
- 
- const formattedPhone = formatPhone(phone);
+  const formattedPhone = formatPhone(phone);
 
-const smsMessages = [
-  `G’DAY ${name?.toUpperCase() || 'MATE'}! YOU’RE ON THE TRADEASSIST A.I WAITLIST 👷‍♂️`,
-  `WHEN YOU MISS A CALL, OUR AI REPLIES INSTANTLY 👇`,
-  `"Hi, this is ${business}’s AI assistant. On the tools right now — reply here to book a job, get a quote, or ask a question ✍🏽."`,
-  `✅ SETUP’S EASY — NO APPS, NO LOGINS.\nJUST SIGN UP, SET IT & FORGET IT.\nNO SICK DAYS, NO PAY RISES, MORE TIME AND LESS ADMIN. GET READY TO WORK SMARTER 🔥`,
-];
-
+  // Define messages
+  const introMsg = `You’re in! You just joined TradeAssist's free waitlist.\nGo on smoko while you’re technically still working.`;
+  const upAndGoMsg = `Smash that Up & Go 💪 TGIF — Thank God It's Friday 🔧🍻`;
+  const snagMsg = `Smash that snag 🌭 TGIF — Thank God It's Friday, legend 🍻`;
 
   try {
     // Save to Supabase
@@ -72,25 +73,33 @@ const smsMessages = [
       { name, business, email, phone: formattedPhone }
     ]);
     if (error) {
-      console.error('❌ Supabase insert error:', error.message);
+      console.error('❌ Supabase error:', error.message);
       throw error;
     }
 
-    // Send SMS messages one by one
-    for (const msg of smsMessages) {
-      await sendSmsWithRetry(msg, formattedPhone);
-      await delay(1000); // 1s delay between messages
-    }
+    // Send first wave immediately
+    await sendSmsWithRetry(introMsg, formattedPhone);
+    await sendSmsWithRetry(upAndGoMsg, formattedPhone);
 
-    // ✅ Redirect to success page
+    // Wait 30s, then send second wave
+    setTimeout(async () => {
+      try {
+        await sendSmsWithRetry(introMsg, formattedPhone);
+        await sendSmsWithRetry(snagMsg, formattedPhone);
+      } catch (err) {
+        console.error('❌ Delayed SMS error:', err.message);
+      }
+    }, 30 * 1000);
+
+    // Redirect to success
     res.redirect('/success');
   } catch (err) {
-    console.error('❌ Error during signup:', err.message);
+    console.error('❌ Error in /send-sms:', err.message);
     res.status(500).send('Failed to onboard user');
   }
 });
 
-// GET /signup-count route
+// GET /signup-count
 app.get('/signup-count', async (req, res) => {
   try {
     const { count, error } = await supabase
@@ -98,22 +107,20 @@ app.get('/signup-count', async (req, res) => {
       .select('*', { count: 'exact', head: true });
 
     if (error) throw error;
-
     res.json({ count: count || 0 });
   } catch (error) {
-    console.error('Error fetching signup count:', error.message);
+    console.error('❌ Count error:', error.message);
     res.status(500).json({ error: 'Failed to get signup count' });
   }
 });
 
-// ✅ Serve success page from public directory
+// Success page
 app.get('/success', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'success.html'));
 });
 
+// Start server
 const host = process.env.HOST || '0.0.0.0';
-
 app.listen(port, host, () => {
   console.log(`✅ Server running at http://${host}:${port}`);
 });
-
