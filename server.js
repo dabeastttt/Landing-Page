@@ -77,27 +77,27 @@ app.post('/send-sms', async (req, res) => {
       throw error;
     }
 
-    // 1️⃣ Send first message instantly
+    // Send first wave immediately
     await sendSmsWithRetry(introMsg, formattedPhone);
+    await sendSmsWithRetry(upAndGoMsg, formattedPhone);
 
-    // 2️⃣ Wait 30 seconds, then send next two
+    // Wait 30s, then send second wave
     setTimeout(async () => {
       try {
-        await sendSmsWithRetry(upAndGoMsg, formattedPhone);
+        await sendSmsWithRetry(introMsg, formattedPhone);
         await sendSmsWithRetry(snagMsg, formattedPhone);
       } catch (err) {
         console.error('❌ Delayed SMS error:', err.message);
       }
     }, 30 * 1000);
 
-    // Redirect
+    // Redirect to success
     res.redirect('/success');
   } catch (err) {
     console.error('❌ Error in /send-sms:', err.message);
     res.status(500).send('Failed to onboard user');
   }
 });
-
 
 // GET /signup-count
 app.get('/signup-count', async (req, res) => {
