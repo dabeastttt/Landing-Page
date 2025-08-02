@@ -25,6 +25,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// Request logger (basic)
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 // Format phone numbers
 function formatPhone(phone) {
   const cleaned = phone.replace(/\D/g, '');
@@ -61,15 +67,15 @@ app.post('/send-sms', async (req, res) => {
   if (!phone) return res.status(400).send('Phone number required');
 
   const formattedPhone = formatPhone(phone);
-
+  const displayName = name?.trim() || 'legend';
+  const businessName = business?.trim() || 'your tradie';
 
   const smsMessages = [ 
-    `G'day ${name || 'legend'}, you're in the TradeAssist waitlist!`,
+    `G'day ${displayName}, you're in the TradeAssist waitlist!`,
     `When you miss a call, our AI replies instantly.`,
-    `Hi, this is ${business || 'your tradie'}’s AI assistant. On the tools right now — reply here to book a job, get a quote, or ask a question.`,
+    `Hi, this is ${businessName}’s AI assistant. On the tools right now — reply here to book a job, get a quote, or ask a question.`,
     `Setup’s easy. No apps, no logins. Just your number. Too easy.`
   ];
-
 
   try {
     // Save to Supabase
@@ -78,16 +84,15 @@ app.post('/send-sms', async (req, res) => {
     ]);
     if (error) {
       console.error('❌ Supabase insert error:', error.message);
-      throw error;
+      return res.status(500).send('Database error');
     }
 
-    // Send messages with 1-second delay between each
+    // Send messages with 1.5s delay between each
     for (const msg of smsMessages) {
       await sendSmsWithRetry(msg, formattedPhone);
-      await delay(1000); // 1 second delay
+      await delay(1500);
     }
 
-    // ✅ Redirect to success page
     res.redirect('/success');
   } catch (err) {
     console.error('❌ Error during signup:', err.message);
@@ -111,7 +116,7 @@ app.get('/signup-count', async (req, res) => {
   }
 });
 
-// Serve success page
+// GET /success
 app.get('/success', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'success.html'));
 });
@@ -121,3 +126,4 @@ const host = process.env.HOST || '0.0.0.0';
 app.listen(port, host, () => {
   console.log(`✅ Server running at http://${host}:${port}`);
 });
+
