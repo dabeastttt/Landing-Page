@@ -339,11 +339,12 @@ main {
 
 <!-- No stray closing </script> tag here! -->
 
-  <div class="toggle-buttons" style="margin-bottom: 2rem;">
+<div class="toggle-buttons" style="margin-bottom: 2rem;">
   <button type="button" id="customerViewBtn">Test Automation - Lead View</button>
   <button type="button" id="tradieViewBtn">Test Automation - Tradie View</button>
 </div>
 
+<main>
   <form id="signupForm" autocomplete="off" novalidate>
     <label for="name">Full Name</label>
     <input type="text" id="name" name="name" placeholder="Name" required />
@@ -359,6 +360,8 @@ main {
  
     <!-- Honeypot field to catch bots -->
     <input type="text" name="honeypot" style="display: none;" tabindex="-1" autocomplete="off" />
+
+    <input type="hidden" name="signupTime" id="signupTime" />
 
     <button type="submit">Join Waitlist</button>
   </form>
@@ -505,11 +508,15 @@ main {
       loadingScreen.style.display = 'block';
       button.disabled = true;
 
+      form.signupTime.value = Date.now(); // set signup time just before submission
+
       const formData = {
-        name: form.name.value.trim(),
-        business: form.business.value.trim(),
-        email: form.email.value.trim(),
-        phone: form.phone.value.trim(),
+       name: form.name.value.trim(),
+       business: form.business.value.trim(),
+       email: form.email.value.trim(),
+       phone: form.phone.value.trim(),
+       honeypot: form.honeypot.value.trim(),
+       signupTime: form.signupTime.value
       };
 
       try {

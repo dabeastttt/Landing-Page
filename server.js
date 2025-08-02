@@ -76,12 +76,20 @@ async function sendSmsWithRetry(msg, to, maxRetries = 2) {
 
 // POST /send-sms
 app.post('/send-sms', smsLimiter, async (req, res) => {
-  const { name, business, email, phone, honeypot } = req.body;
+  const { name, business, email, phone, honeypot, signupTime } = req.body;
+
 
   // 🐝 Honeypot field check (bots will usually fill this)
   if (honeypot && honeypot.trim() !== '') {
     return res.status(400).send('Bot detected');
   }
+
+    // 🤖 Time-based bot behavior detection (form submitted too fast)
+  const timeTaken = Date.now() - Number(signupTime || 0);
+  if (timeTaken < 1000) {
+    return res.status(400).send('Bot-like behavior');
+  }
+
 
   if (!phone) return res.status(400).send('Phone number required');
 
