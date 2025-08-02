@@ -63,8 +63,8 @@ app.post('/send-sms', async (req, res) => {
   const formattedPhone = formatPhone(phone);
 
 const smsMessages = [ 
-  `Hey, you're on TradeAssist’s waitlist. Never miss a job again — even when you're on smoko!`,
-  `Now smash down that snag, legend 💪. We’ve got your calls covered.`,
+  `Hey ${name || 'legend'}, you're on TradeAssist’s waitlist. Never miss a job again — even when you're on smoko!`,
+  `Now smash down that SNAG, mate 💪. We’ve got your calls covered.`,
 ];
 
 
