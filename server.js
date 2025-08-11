@@ -135,7 +135,7 @@ app.get('/signup-count', async (req, res) => {
   }
 });
 
- GET /success
+ // GET /success
   app.get('/success', (req, res) => {
    res.sendFile(path.join(__dirname, 'public', 'success.html'));
   });
