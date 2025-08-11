@@ -135,10 +135,10 @@ app.get('/signup-count', async (req, res) => {
   }
 });
 
-// GET /success
-//app.get('/success', (req, res) => {
-//  res.sendFile(path.join(__dirname, 'public', 'success.html'));
-//});
+ GET /success
+  app.get('/success', (req, res) => {
+   res.sendFile(path.join(__dirname, 'public', 'success.html'));
+  });
 
 // Start server
 const host = process.env.HOST || '0.0.0.0';
