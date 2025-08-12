@@ -77,7 +77,7 @@ async function sendSmsWithRetry(msg, to, maxRetries = 2) {
 
 // POST /send-sms
 app.post('/send-sms', smsLimiter, async (req, res) => {
-  const { name, business, email, phone, honeypot, signupTime } = req.body;
+  const { name, business, email, phone,signupTime } = req.body;
 
   if (!phone) return res.status(400).send('Phone number required');
 
