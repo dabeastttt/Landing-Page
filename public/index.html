@@ -293,58 +293,83 @@ main {
     <path d="M20 36v-4c0-6.6 5.4-12 12-12s12 5.4 12 12v4"
           fill="none" stroke="#FFFFFF" stroke-width="2"/>
   </svg>
-
 <div style="text-align: center;">
-  <h1 style="margin-bottom: 1.5rem;">TradeAssist AI</h1>
+  <h1 style="margin-bottom: 1.5rem; font-size: 2rem; color: #FF6B00; font-weight: 700;">TradeAssist AI</h1>
 </div>
 
+<!-- Urgency message -->
+<div id="signupCountMessage" style="text-align:center; margin-bottom:1rem; color:#FF6B00; font-weight:700; font-size:1.1rem;">
+  Loading current waitlist status...
+</div>
 
+<!-- Subheading + bullet points -->
+<section style="margin: 2rem auto; max-width: 800px; text-align: center; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+  <!-- Subheading -->
+  <h2 style="margin: 0 0 1rem; color: #FF6B00; font-weight: 600; font-size: clamp(18px, 2.2vw, 24px); line-height: 1.4;">
+    When you miss a call, our AI instantly follows up
+  </h2>
 
-  <!-- Urgency message -->
-  <div id="signupCountMessage" style="text-align:center; margin-bottom:1rem; color:#FF6B00; font-weight:700; font-size:1.1rem;">
-    Loading current waitlist status...
-  </div>
+<!-- Bullet points -->
+<ul style="margin: 0 auto; padding: 0; list-style: none; display: grid; gap: 0.75rem; max-width: 680px; text-align: left;">
+  <li style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 16px; line-height: 1.5; color: #ffffff;">
+    <span aria-hidden="true" style="flex: 0 0 auto; font-size: 1.1em; color: #FF6B00;">✔️</span>
+    Sends an SMS to the caller instantly
+  </li>
+  <li style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 16px; line-height: 1.5; color: #ffffff;">
+    <span aria-hidden="true" style="flex: 0 0 auto; font-size: 1.1em; color: #FF6B00;">✔️</span>
+    Books jobs and schedules calls automatically
+  </li>
+  <li style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 16px; line-height: 1.5; color: #ffffff;">
+    <span aria-hidden="true" style="flex: 0 0 auto; font-size: 1.1em; color: #FF6B00;">✔️</span>
+    Filters out spam calls
+  </li>
+  <li style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 16px; line-height: 1.5; color: #ffffff;">
+    <span aria-hidden="true" style="flex: 0 0 auto; font-size: 1.1em; color: #FF6B00;">✔️</span>
+    Keeps you updated in real time
+  </li>
+</ul>
 
-<p style="text-align:center; margin-top: 2rem; color: #FF914D; font-weight: 600; font-size: 1rem; line-height: 1.6;">
-  When you miss a call, our AI instantly follows up via SMS,books jobs and calls, sorts out spam calls and keeps you in the loop.<br>
-  <span style="display: inline-block; margin-top: 1rem;">
-    See how it works in 15 seconds — click a view below.
-  </span>
+<!-- Quick explainer line -->
+<p style="margin: 0 0 1.25rem; color: #ffffff; font-weight: 500; font-size: clamp(14px, 1.5vw, 16px); line-height: 1.6;">
+  See how it works in 15 seconds — click a view below.
 </p>
 
 
-  <div id="customerSmsPreview" class="sms-preview" style="display:none;">
-    <h2 style="font-family: 'Anton', sans-serif; font-weight: 700;">WHAT YOUR CUSTOMER WILL SEE</h2>
-    <div class="chat">
-      <div class="bubble ai" style="animation-delay: 0.45s;">Hi! I’m Jake’s Plumbing AI assistant, here to help while Jake’s on a job — how can we assist you today?</div>
-      <div class="bubble client" style="animation-delay: 1.6s;">Hey, just wondering if you do blocked drains?</div>
-      <div class="bubble ai" style="animation-delay: 3.1s;">Absolutely, we do. Want me to book you in for a quote today or tomorrow? Just leave your name and information and I’ll notify Jake now.</div>
+
+<!-- Customer SMS Preview -->
+<div id="customerSmsPreview" class="sms-preview" style="display:none;">
+  <h2 style="font-family: 'Anton', sans-serif; font-weight: 700; font-size: 1.5rem; color: #FF6B00;">WHAT YOUR CUSTOMER WILL SEE</h2>
+  <div class="chat">
+    <div class="bubble ai" style="animation-delay: 0.45s;">Hi! I’m Jake’s Plumbing AI assistant, here to help while Jake’s on a job — how can we assist you today?</div>
+    <div class="bubble client" style="animation-delay: 1.6s;">Hey, just wondering if you do blocked drains?</div>
+    <div class="bubble ai" style="animation-delay: 3.1s;">Absolutely, we do. Want me to book you in for a quote today or tomorrow? Just leave your name and information and I’ll notify Jake now.</div>
+  </div>
+</div>
+
+<!-- Tradie SMS Preview -->
+<div id="tradieSmsPreview" class="sms-preview" style="display:none;">
+  <h2 style="font-family: 'Anton', sans-serif; font-weight: 700; font-size: 1.5rem; color: #FF6B00;">WHAT YOU WILL SEE</h2>
+  <div class="chat"> 
+    <div class="bubble ai" style="animation-delay: 0.45s;">🤖 Missed call from 0412 345 678: John Smith, blocked drain, needs a quote!</div>
+    <div class="bubble ai" style="animation-delay: 1.8s;">
+      ✅ TradeAssist AI: I’ve followed up and locked in the lead — your call is scheduled for 1 PM, as per your preferred time. 
+      <br>Reply with <strong>ACCEPT</strong> or <strong>DECLINE</strong> to confirm.
+    </div>
+    <div class="bubble client" style="animation-delay: 3.3s;">
+      ACCEPT. I Just got back from smoko and locked in the booking, Cheers for keeping the lead warm.
     </div>
   </div>
+</div>
 
-  <div id="tradieSmsPreview" class="sms-preview" style="display:none;">
-    <h2 style="font-family: 'Anton', sans-serif; font-weight: 700;">WHAT YOU WILL SEE</h2>
-    <div class="chat"> 
-      <div class="bubble ai" style="animation-delay: 0.45s;">🤖 Missed call from 0412 345 678: John Smith, blocked drain, needs a quote!</div>
-      <div class="bubble ai" style="animation-delay: 1.8s;">
-        ✅ TradeAssist AI: I’ve followed up and locked in the lead — your call is scheduled for 1 PM, as per your preferred time. 
-        <br>Reply with <strong>ACCEPT</strong> or <strong>DECLINE</strong> to confirm.
-      </div>
-      <div class="bubble client" style="animation-delay: 3.3s;">
-        ACCEPT. I Just got back from smoko and locked in the booking, Cheers for keeping the lead warm.
-      </div>
-    </div>
-  </div>
-
-<!-- No stray closing </script> tag here! -->
-
-<div class="toggle-buttons" style="margin-bottom: 2rem;">
+<!-- Toggle Buttons -->
+<div class="toggle-buttons" style="margin-bottom: 2rem; text-align:center;">
   <button type="button" id="customerViewBtn">Test Automation - Customer View</button>
   <button type="button" id="tradieViewBtn">Test Automation - Tradie View</button>
 </div>
 
+<!-- Signup Form -->
 <main>
-  <form id="signupForm" autocomplete="off" novalidate>
+  <form id="signupForm" autocomplete="off" novalidate style="max-width: 500px; margin: 0 auto; display: grid; gap: 1rem;">
     <label for="name">Full Name</label>
     <input type="text" id="name" name="name" placeholder="Name" required />
 
@@ -356,21 +381,23 @@ main {
 
     <label for="phone">Mobile Number</label>
     <input type="tel" id="phone" name="phone" placeholder="0400 000 000" pattern="[0-9\s\-+]+" required />
- 
+
     <input type="hidden" name="signupTime" id="signupTime" />
 
-    <button type="submit">Join Free Waitlist</button>
+    <button type="submit" style="background-color:#FF6B00; color:white; font-weight:700; padding:0.75rem; border:none; cursor:pointer;">Join Free Waitlist</button>
   </form>
 </main>
 
-<div id="loadingScreen" class="loading-screen">
-  <h2 style="font-family: 'Anton', sans-serif; font-weight: 700; font-size: 2rem; margin-bottom: 1rem;">
-    You're in! See how TradeAssist A.I instantly follows up on missed calls.
+<!-- Loading Screen -->
+<div id="loadingScreen" class="loading-screen" style="text-align:center; margin-top:2rem;">
+  <h2 style="font-family: 'Anton', sans-serif; font-weight: 700; font-size: 1.75rem; color:#FF6B00; margin-bottom: 1rem;">
+    You're in! See how TradeAssist AI instantly follows up on missed calls.
   </h2>
 </div>
-
+</div>
 
 <script>
+
   const canvas = document.getElementById('matrixCanvas');
   const ctx = canvas.getContext('2d');
 
